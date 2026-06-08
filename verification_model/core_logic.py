@@ -18,6 +18,7 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 def start_evaluation_process(request_data, db_ref):
     student_id = request_data.studentId
     github_url = request_data.projectLink
+    project_desc = request_data.project_description
     
     if github_url.endswith('/'): github_url = github_url[:-1]
     
@@ -53,20 +54,24 @@ def start_evaluation_process(request_data, db_ref):
 
         model = genai.GenerativeModel('gemini-3-flash-preview')
         prompt = f"""
-        You are an expert code reviewer for the Syntra.AI platform.
-        Evaluate the following project code based on the track: {request_data.trackId}.
+        You are an expert academic code reviewer for the Syntra.AI platform.
+        Evaluate the following project code based on:
+        1. Target Track: {request_data.trackId}
+        2. Expected Project Description: {project_desc}
+        
+        Your task is to analyze the code content and determine if it aligns with the provided description and fulfills the requirements of the specified track. Assess the code quality, feature implementation, and architecture.
         
         Return the result STRICTLY as a JSON object with this structure:
         {{
             "score": number,
             "status": "Passed" or "Failed",
             "feedback": {{
-                "strengths": ["list of strings"],
-                "weaknesses": ["list of strings"],
-                "suggestions": "string"
+                "strengths": ["list of strings detailing code strengths aligned with description"],
+                "weaknesses": ["list of strings detailing code weaknesses or missing components"],
+                "suggestions": "string with overall improvements"
             }},
             "requirements_met": [
-                {{"feature": "feature name", "status": boolean}}
+                {{"feature": "feature name extracted from description", "status": boolean}}
             ]
         }}
 
