@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from .schemas import WeightRequest, WeightResponse
-from .core_logic import calculate_roadmap_weights
+from schemas import WeightRequest, WeightResponse
+from core_logic import calculate_roadmap_weights
 
 app = FastAPI(
     title="Syntra.AI - Progress & Weight Tracking Service",
