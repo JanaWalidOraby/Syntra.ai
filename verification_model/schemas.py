@@ -5,6 +5,7 @@ class ProjectEvaluationRequest(BaseModel):
     projectLink: str
     trackId: str
     studentId: str
+    project_description: str
 
 class FeedbackContent(BaseModel):
     strengths: List[str]
