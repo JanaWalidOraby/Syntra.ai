@@ -1,3 +1,4 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, BackgroundTasks
 from schemas import ProjectEvaluationRequest, ProjectEvaluationResponse
 from core_logic import start_evaluation_process
