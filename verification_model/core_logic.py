@@ -52,7 +52,10 @@ def start_evaluation_process(request_data, db_ref):
                     with open(path, 'r', encoding='utf-8') as f:
                         all_code += f"\n--- File: {file} ---\n" + f.read()
 
-        model = genai.GenerativeModel('gemini-3-flash-preview')
+        #model = genai.GenerativeModel('gemini-3-flash-preview')
+        PRIMARY_MODEL = genai.GenerativeModel('gemini-3-flash-preview')
+        FALLBACK_MODEL = genai.GenerativeModel('gemma-4-31b-it')
+        
         prompt = f"""
         You are an expert academic code reviewer for the Syntra.AI platform.
         Evaluate the following project code based on:
@@ -79,7 +82,25 @@ def start_evaluation_process(request_data, db_ref):
         {all_code}
         """
         
+        '''
         response = model.generate_content(prompt)
+        '''
+        raw_response_text = ""
+
+        try:
+            print("Trying primary model (Gemini)...")
+            response = PRIMARY_MODEL.generate_content(prompt)
+            raw_response_text = response.text
+        except Exception as e:
+
+            print(f"Primary model failed due to: {str(e)}. Trying fallback model (Gemma)...")
+            try:
+                response = FALLBACK_MODEL.generate_content(prompt)
+                raw_response_text = response.text
+            except Exception as fallback_error:
+
+                raise Exception(f"Both models failed. Gemma error: {str(fallback_error)}")
+        
         
         json_match = re.search(r'\{.*\}', response.text, re.DOTALL)
         res_text = json_match.group(0) if json_match else response.text
