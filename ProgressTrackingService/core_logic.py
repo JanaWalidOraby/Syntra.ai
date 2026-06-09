@@ -10,8 +10,8 @@ def calculate_roadmap_weights(track_name: str, roadmap_courses: list) -> dict:
     
     try:
         #model = genai.GenerativeModel('gemini-3-flash-preview')
-        PRIMARY_MODEL = genai.GenerativeModel('gemini-3-flash-preview')
-        FALLBACK_MODEL = genai.GenerativeModel('gemma-4-31b-it')
+        PRIMARY_MODEL = genai.GenerativeModel('gemma-4-31b-it')
+        FALLBACK_MODEL = genai.GenerativeModel('gemini-3-flash-preview')
         
         prompt = f"""
         You are an expert academic advisor in computer science and curriculum design.
