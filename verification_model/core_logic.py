@@ -53,8 +53,8 @@ def start_evaluation_process(request_data, db_ref):
                         all_code += f"\n--- File: {file} ---\n" + f.read()
 
         #model = genai.GenerativeModel('gemini-3-flash-preview')
-        PRIMARY_MODEL = genai.GenerativeModel('gemini-3-flash-preview')
-        FALLBACK_MODEL = genai.GenerativeModel('gemma-4-31b-it')
+        PRIMARY_MODEL = genai.GenerativeModel('gemma-4-31b-it')
+        FALLBACK_MODEL = genai.GenerativeModel('gemini-3-flash-preview')
         
         prompt = f"""
         You are an expert academic code reviewer for the Syntra.AI platform.
