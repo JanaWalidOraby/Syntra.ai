@@ -53,8 +53,14 @@ def start_evaluation_process(request_data, db_ref):
                         all_code += f"\n--- File: {file} ---\n" + f.read()
 
         #model = genai.GenerativeModel('gemini-3-flash-preview')
-        PRIMARY_MODEL = genai.GenerativeModel('gemma-4-31b-it')
-        FALLBACK_MODEL = genai.GenerativeModel('gemini-3-flash-preview')
+        PRIMARY_MODEL = genai.GenerativeModel(
+            'models/gemma-4-31b-it',
+            generation_config={"response_mime_type": "application/json"}
+        )
+        FALLBACK_MODEL = genai.GenerativeModel(
+            'models/gemini-3-flash-preview',
+            generation_config={"response_mime_type": "application/json"}
+        )
         
         prompt = f"""
         You are an expert academic code reviewer for the Syntra.AI platform.
@@ -88,18 +94,18 @@ def start_evaluation_process(request_data, db_ref):
         raw_response_text = ""
 
         try:
-            print("Trying primary model (Gemini)...")
+            print("Trying primary model (Gemma 4)...")
             response = PRIMARY_MODEL.generate_content(prompt)
             raw_response_text = response.text
         except Exception as e:
 
-            print(f"Primary model failed due to: {str(e)}. Trying fallback model (Gemma)...")
+            print(f"Primary model failed due to: {str(e)}. Trying fallback model (Gemini 3 flash)...")
             try:
                 response = FALLBACK_MODEL.generate_content(prompt)
                 raw_response_text = response.text
             except Exception as fallback_error:
 
-                raise Exception(f"Both models failed. Gemma error: {str(fallback_error)}")
+                raise Exception(f"Both models failed. Gemini Flash error: {str(fallback_error)}")
         
         
         json_match = re.search(r'\{.*\}', response.text, re.DOTALL)
